@@ -52,25 +52,38 @@ class Piece():
 		selected = (self.x, self.y)
 
 for i in range(0, 8):
-	Piece("W_Pawn"+str(i), pygame.image.load("../images/wpawn.png").convert_alpha(), (i, 6))
+	Piece("W_Pawn", pygame.image.load("../images/wpawn.png").convert_alpha(), (i, 6))
+	Piece("B_Pawn", pygame.image.load("../images/bpawn.png").convert_alpha(), (i, 1))
 
 Piece("W_Rook", pygame.image.load("../images/wrook.png").convert_alpha(), (0, 7))
-Piece("W_Rook2", pygame.image.load("../images/wrook.png").convert_alpha(), (7, 7))
+Piece("W_Rook", pygame.image.load("../images/wrook.png").convert_alpha(), (7, 7))
 Piece("W_Knight", pygame.image.load("../images/wknight.png").convert_alpha(), (1, 7))
-Piece("W_Knight2", pygame.image.load("../images/wknight.png").convert_alpha(), (6, 7))
+Piece("W_Knight", pygame.image.load("../images/wknight.png").convert_alpha(), (6, 7))
 Piece("W_Bishop", pygame.image.load("../images/wbishop.png").convert_alpha(), (2, 7))
-Piece("W_Bishop2", pygame.image.load("../images/wbishop.png").convert_alpha(), (5, 7))
+Piece("W_Bishop", pygame.image.load("../images/wbishop.png").convert_alpha(), (5, 7))
 Piece("W_Queen", pygame.image.load("../images/wqueen.png").convert_alpha(), (3, 7))
 Piece("W_King", pygame.image.load("../images/wking.png").convert_alpha(), (4, 7))
+Piece("B_Rook", pygame.image.load("../images/brook.png").convert_alpha(), (0, 0))
+Piece("B_Rook", pygame.image.load("../images/brook.png").convert_alpha(), (7, 0))
+Piece("B_Knight", pygame.image.load("../images/bknight.png").convert_alpha(), (1, 0))
+Piece("B_Knight", pygame.image.load("../images/bknight.png").convert_alpha(), (6, 0))
+Piece("B_Bishop", pygame.image.load("../images/bbishop.png").convert_alpha(), (2, 0))
+Piece("B_Bishop", pygame.image.load("../images/bbishop.png").convert_alpha(), (5, 0))
+Piece("B_Queen", pygame.image.load("../images/bqueen.png").convert_alpha(), (3, 0))
+Piece("B_King", pygame.image.load("../images/bking.png").convert_alpha(), (4, 0))
 
 #Makes sure x is between min and max
-def math_clamp(x, min, max): return x < min and min or (x > max and max or x)
+def math_clamp(x, min, max): #had to do it
+	return x < min and min or (x > max and max or x)
 
 def isFree(pos):
+	whitepieces = ["W_Rook", "W_Knight", "W_Bishop", "W_Queen", "W_King"]
+	blackpieces = ["B_Rook", "B_Knight", "B_Bishop", "B_Queen", "B_King"]
 	row, col = pos[0], pos[1]
-	if ((row < 0) or (col < 0) or (row > len(board)) or (col > len(board))): return
-
-	return (board[row][col] == EMPTY)
+	if ((row < 0) or (col < 0) or (row > len(board)) or (col > len(board))): #can't handle it
+		return
+	print(board[row][col].name in blackpieces) #why isn't this true when you attack a black piece?
+	return (board[row][col] == EMPTY or board[row][col].name in blackpieces)
 
 #Returns top left pixel value of grid pos
 def pixelpos(pos):
