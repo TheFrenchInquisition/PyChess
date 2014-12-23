@@ -5,7 +5,7 @@ tilew, tileh = 45, 45
 height = tileh * 8
 width = tilew * 8
 
-size = [width, height]
+size = [width, height+40]
 
 os.environ["SDL_VIDEO_CENTERED"] = "1"
 
@@ -30,10 +30,10 @@ board = [
 	[0, 0, 0, 0, 0, 0, 0, 0],
 ]
 
-playerIsWhite = True
+WHITE = True
+BLACK = False
 
-whitepieces = ["W_Pawn", "W_Rook", "W_Knight", "W_Bishop", "W_Queen", "W_King"]
-blackpieces = ["B_Pawn", "B_Rook", "B_Knight", "B_Bishop", "B_Queen", "B_King"]
+playerColor = WHITE
 
 EMPTY = 0 #Even though 0 is shorter to type..
 class Piece():
@@ -81,17 +81,20 @@ Piece("B_Bishop", pygame.image.load("../images/bbishop.png").convert_alpha(), (5
 Piece("B_Queen", pygame.image.load("../images/bqueen.png").convert_alpha(), (3, 0))
 Piece("B_King", pygame.image.load("../images/bking.png").convert_alpha(), (4, 0))
 
+font = pygame.font.Font(None, 40)
+turnindic = font.render("Turn: "+(playerColor == WHITE and "white" or "black"), True, (139, 125, 107), (0, 0, 0, 0))
+piecesleft = font.render("Pieces: "+str(len(pieces)), True, (139, 125, 107), (0, 0, 0, 0))
+
 #Makes sure x is between min and max
 def math_clamp(x, min, max): return x < min and min or (x > max and max or x)
 
 def containsEnemy(pos):
 	row, col = pos[0], pos[1]
 	if isFree(pos): return False
-	print(board[row][col].name)
-	if playerIsWhite:
-		return (board[row][col].name in blackpieces)
+	if playerColor == WHITE:
+		return (board[row][col].name.startswith("B_"))
 	else:
-		return (board[row][col].name in whitepieces)
+		return (board[row][col].name.startswith("W_"))
 
 def isFree(pos):
 	row, col = pos[0], pos[1]
@@ -127,6 +130,8 @@ while True:
 			pygame.draw.rect(screen, (255, 228, 196), [row*90+tilew, col*90+tileh, tilew, tileh])
 
 	drawPieces()
+	screen.blit(turnindic, (0, height+10))
+	screen.blit(piecesleft, (width-140, height+10))
 
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
@@ -143,13 +148,13 @@ while True:
 			else:
 				if isFree((curRow, curCol)):
 					board[selected[0]][selected[1]].move((curRow, curCol))
+					playerColor = not playerColor
+					turnindic = font.render("Turn: "+(playerColor == WHITE and "white" or "black"), True, (139, 125, 107), (0, 0, 0, 0))
 				elif containsEnemy((curRow, curCol)):
 					board[selected[0]][selected[1]].attack(board[curRow][curCol])
+					playerColor = not playerColor
+					turnindic = font.render("Turn: "+(playerColor == WHITE and "white" or "black"), True, (139, 125, 107), (0, 0, 0, 0))
 				else:
 					board[curRow][curCol].select()
-				if playerIsWhite:
-					playerIsWhite = False
-				else:
-					playerIsWhite = True
 
 	pygame.display.update()
