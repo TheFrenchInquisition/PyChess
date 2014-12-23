@@ -81,9 +81,12 @@ Piece("B_Bishop", pygame.image.load("../images/bbishop.png").convert_alpha(), (5
 Piece("B_Queen", pygame.image.load("../images/bqueen.png").convert_alpha(), (3, 0))
 Piece("B_King", pygame.image.load("../images/bking.png").convert_alpha(), (4, 0))
 
-font = pygame.font.Font(None, 40)
-turnindic = font.render("Turn: "+(playerColor == WHITE and "white" or "black"), True, (139, 125, 107), (0, 0, 0, 0))
-piecesleft = font.render("Pieces: "+str(len(pieces)), True, (139, 125, 107), (0, 0, 0, 0))
+font = pygame.font.SysFont("monospace", 20)
+def updateText():
+	global turnindic, piecesleft
+	turnindic = font.render("Turn: "+(playerColor == WHITE and "white" or "black"), True, (139, 125, 107), (0, 0, 0, 0))
+	piecesleft = font.render("Pieces: "+str(len(pieces)), True, (139, 125, 107), (0, 0, 0, 0))
+updateText()
 
 #Makes sure x is between min and max
 def math_clamp(x, min, max): return x < min and min or (x > max and max or x)
@@ -149,11 +152,11 @@ while True:
 				if isFree((curRow, curCol)):
 					board[selected[0]][selected[1]].move((curRow, curCol))
 					playerColor = not playerColor
-					turnindic = font.render("Turn: "+(playerColor == WHITE and "white" or "black"), True, (139, 125, 107), (0, 0, 0, 0))
+					updateText()
 				elif containsEnemy((curRow, curCol)):
 					board[selected[0]][selected[1]].attack(board[curRow][curCol])
 					playerColor = not playerColor
-					turnindic = font.render("Turn: "+(playerColor == WHITE and "white" or "black"), True, (139, 125, 107), (0, 0, 0, 0))
+					updateText()
 				else:
 					board[curRow][curCol].select()
 
