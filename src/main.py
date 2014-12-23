@@ -17,18 +17,6 @@ screen = pygame.display.set_mode(size)
 pygame.display.set_caption("Chess")
 
 #load images and stuff
-wpawnimg = pygame.image.load("../images/wpawn.png").convert_alpha()
-wrookimg = pygame.image.load("../images/wrook.png").convert_alpha()
-wknightimg = pygame.image.load("../images/wknight.png").convert_alpha()
-wbishopimg = pygame.image.load("../images/wbishop.png").convert_alpha()
-wqueenimg = pygame.image.load("../images/wqueen.png").convert_alpha()
-wkingimg = pygame.image.load("../images/wking.png").convert_alpha()
-bpawnimg = pygame.image.load("../images/bpawn.png").convert_alpha()
-brookimg = pygame.image.load("../images/brook.png").convert_alpha()
-bknightimg = pygame.image.load("../images/bknight.png").convert_alpha()
-bbishopimg = pygame.image.load("../images/bbishop.png").convert_alpha()
-bqueenimg = pygame.image.load("../images/bqueen.png").convert_alpha()
-bkingimg = pygame.image.load("../images/bking.png").convert_alpha()
 selectimg = pygame.image.load("../images/select.png").convert_alpha()
 
 selected = False
@@ -42,12 +30,18 @@ WQUEE = 5
 WKING = 6
 
 pieceimgs = {
-	WPAWN: wpawnimg,
-	WROOK: wrookimg,
-	WKNIG: wknightimg,
-	WBISH: wbishopimg,
-	WQUEE: wqueenimg,
-	WKING: wkingimg,
+	WPAWN: pygame.image.load("../images/wpawn.png").convert_alpha(),
+	WROOK: pygame.image.load("../images/wrook.png").convert_alpha(),
+	WKNIG: pygame.image.load("../images/wknight.png").convert_alpha(),
+	WBISH: pygame.image.load("../images/wbishop.png").convert_alpha(),
+	WQUEE: pygame.image.load("../images/wqueen.png").convert_alpha(),
+	WKING: pygame.image.load("../images/wking.png").convert_alpha(),
+	BPAWN: pygame.image.load("../images/bpawn.png").convert_alpha(),
+	BROOK: pygame.image.load("../images/brook.png").convert_alpha(),
+	BKNIG: pygame.image.load("../images/bknight.png").convert_alpha(),
+	BBISH: pygame.image.load("../images/bbishop.png").convert_alpha(),
+	BQUEE: pygame.image.load("../images/bqueen.png").convert_alpha(),
+	BKING: pygame.image.load("../images/bking.png").convert_alpha(),
 }
 
 board = [
@@ -112,7 +106,7 @@ cPiece(WKING, (4, 7))
 clock = pygame.time.Clock()
 
 while True:
-	clock.tick(10)
+	clock.tick(30)
 
 	pygame.draw.rect(screen, (139, 125, 107), [0, 0, width, height])
 	for row in range(4):
