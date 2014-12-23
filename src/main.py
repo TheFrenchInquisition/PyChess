@@ -1,6 +1,9 @@
 import pygame, sys, os, math
 pygame.init()
 
+python_version_stupid = "Python3"
+modifier = python_version_stupid == "Python3" and 1 or 0
+
 tilew, tileh = 45, 45
 height = tileh * 8
 width = tilew * 8
@@ -93,12 +96,12 @@ def select(pos):
 
 screen.fill((102, 102, 102))
 
-cPiece(WPAWN, (0, 1))
-cPiece(WROOK, (0, 0))
-cPiece(WKNIG, (1, 0))
-cPiece(WBISH, (2, 0))
-cPiece(WQUEE, (3, 0))
-cPiece(WKING, (4, 0))
+cPiece(WPAWN, (0, 6))
+cPiece(WROOK, (0, 7))
+cPiece(WKNIG, (1, 7))
+cPiece(WBISH, (2, 7))
+cPiece(WQUEE, (3, 7))
+cPiece(WKING, (4, 7))
 
 clock = pygame.time.Clock()
 
@@ -119,13 +122,15 @@ while True:
 			sys.exit()
 		elif event.type == pygame.MOUSEBUTTONUP:
 			(mouseX, mouseY) = pygame.mouse.get_pos()
-			curCol = int(math.ceil(mouseY/tileh))
-			curRow = int(math.ceil(mouseX/tilew))
+			curCol = int(math.ceil(mouseY/tileh) - modifier)
+			curRow = int(math.ceil(mouseX/tilew) - modifier)
+			print(curRow, curCol)
 
 			if selected == False:
 				if not isFree((curRow, curCol)):
 					select((curRow, curCol))
 			else:
-				move(selected, (curRow, curCol))
+				if isFree((curRow, curCol)):
+					move(selected, (curRow, curCol))
 
-	pygame.display.flip()
+	pygame.display.update()
