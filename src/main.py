@@ -1,4 +1,6 @@
 import pygame, sys, os, math
+sys.dont_write_bytecode = True
+from piecelogic import *
 pygame.init()
 
 tilew, tileh = 45, 45
@@ -150,13 +152,15 @@ while True:
 					board[curRow][curCol].select()
 			else:
 				if isFree((curRow, curCol)):
-					board[selected[0]][selected[1]].move((curRow, curCol))
-					playerColor = not playerColor
-					updateText()
+					if pieceCanMove(board[selected[0]][selected[1]]):
+						board[selected[0]][selected[1]].move((curRow, curCol))
+						playerColor = not playerColor
+						updateText()
 				elif containsEnemy((curRow, curCol)):
-					board[selected[0]][selected[1]].attack(board[curRow][curCol])
-					playerColor = not playerColor
-					updateText()
+					if pieceCanMove(board[selected[0]][selected[1]]):
+						board[selected[0]][selected[1]].attack(board[curRow][curCol])
+						playerColor = not playerColor
+						updateText()
 				else:
 					board[curRow][curCol].select()
 
