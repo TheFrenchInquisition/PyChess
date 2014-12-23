@@ -1,2 +1,2 @@
 def pieceCanMove(piece):
-	return False
+	return True
