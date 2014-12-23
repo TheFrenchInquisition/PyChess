@@ -30,6 +30,11 @@ board = [
 	[0, 0, 0, 0, 0, 0, 0, 0],
 ]
 
+playerIsWhite = True
+
+whitepieces = ["W_Pawn", "W_Rook", "W_Knight", "W_Bishop", "W_Queen", "W_King"]
+blackpieces = ["B_Pawn", "B_Rook", "B_Knight", "B_Bishop", "B_Queen", "B_King"]
+
 EMPTY = 0 #Even though 0 is shorter to type..
 class Piece():
 	def __init__(self,name,image,startpos):
@@ -79,13 +84,14 @@ Piece("B_King", pygame.image.load("../images/bking.png").convert_alpha(), (4, 0)
 #Makes sure x is between min and max
 def math_clamp(x, min, max): return x < min and min or (x > max and max or x)
 
-whitepieces = ["W_Pawn", "W_Rook", "W_Knight", "W_Bishop", "W_Queen", "W_King"]
-blackpieces = ["B_Pawn", "B_Rook", "B_Knight", "B_Bishop", "B_Queen", "B_King"]
 def containsEnemy(pos):
 	row, col = pos[0], pos[1]
 	if isFree(pos): return False
-	print(board[row][col].name) #why isn't this true when you attack a black piece?
-	return (board[row][col].name in blackpieces)
+	print(board[row][col].name)
+	if playerIsWhite:
+		return (board[row][col].name in blackpieces)
+	else:
+		return (board[row][col].name in whitepieces)
 
 def isFree(pos):
 	row, col = pos[0], pos[1]
@@ -132,7 +138,7 @@ while True:
 			curRow = int(math.ceil(mouseX/tilew) - 1)
 
 			if selected == False:
-				if not isFree((curRow, curCol)):
+				if not isFree((curRow, curCol)) and not containsEnemy((curRow, curCol)):
 					board[curRow][curCol].select()
 			else:
 				if isFree((curRow, curCol)):
@@ -141,5 +147,9 @@ while True:
 					board[selected[0]][selected[1]].attack(board[curRow][curCol])
 				else:
 					board[curRow][curCol].select()
+				if playerIsWhite:
+					playerIsWhite = False
+				else:
+					playerIsWhite = True
 
 	pygame.display.update()
