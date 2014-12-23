@@ -47,6 +47,10 @@ class Piece():
 		self.y = pos[1]
 		board[self.x][self.y] = self
 		selected = False
+	def attack(self,enemy):
+		global pieces
+		self.move((enemy.x, enemy.y))
+		pieces.remove(enemy)
 	def select(self):
 		global selected
 		selected = (self.x, self.y)
@@ -73,17 +77,20 @@ Piece("B_Queen", pygame.image.load("../images/bqueen.png").convert_alpha(), (3, 
 Piece("B_King", pygame.image.load("../images/bking.png").convert_alpha(), (4, 0))
 
 #Makes sure x is between min and max
-def math_clamp(x, min, max): #had to do it
-	return x < min and min or (x > max and max or x)
+def math_clamp(x, min, max): return x < min and min or (x > max and max or x)
+
+whitepieces = ["W_Pawn", "W_Rook", "W_Knight", "W_Bishop", "W_Queen", "W_King"]
+blackpieces = ["B_Pawn", "B_Rook", "B_Knight", "B_Bishop", "B_Queen", "B_King"]
+def containsEnemy(pos):
+	row, col = pos[0], pos[1]
+	if isFree(pos): return False
+	print(board[row][col].name) #why isn't this true when you attack a black piece?
+	return (board[row][col].name in blackpieces)
 
 def isFree(pos):
-	whitepieces = ["W_Rook", "W_Knight", "W_Bishop", "W_Queen", "W_King"]
-	blackpieces = ["B_Rook", "B_Knight", "B_Bishop", "B_Queen", "B_King"]
 	row, col = pos[0], pos[1]
-	if ((row < 0) or (col < 0) or (row > len(board)) or (col > len(board))): #can't handle it
-		return
-	print(board[row][col].name in blackpieces) #why isn't this true when you attack a black piece?
-	return (board[row][col] == EMPTY or board[row][col].name in blackpieces)
+	if ((row < 0) or (col < 0) or (row > len(board)) or (col > len(board))): return
+	return board[row][col] == EMPTY
 
 #Returns top left pixel value of grid pos
 def pixelpos(pos):
@@ -130,6 +137,8 @@ while True:
 			else:
 				if isFree((curRow, curCol)):
 					board[selected[0]][selected[1]].move((curRow, curCol))
+				elif containsEnemy((curRow, curCol)):
+					board[selected[0]][selected[1]].attack(board[curRow][curCol])
 				else:
 					board[curRow][curCol].select()
 
