@@ -1,6 +1,7 @@
 import pygame, sys, os, math
 sys.dont_write_bytecode = True
 from piecelogic import *
+from imagedefs import *
 pygame.init()
 
 tilew, tileh = 45, 45
@@ -14,9 +15,6 @@ os.environ["SDL_VIDEO_CENTERED"] = "1"
 screen = pygame.display.set_mode(size)
 
 pygame.display.set_caption("Chess")
-
-#load images and stuff
-selectimg = pygame.image.load("../images/select.png").convert_alpha()
 
 selected = False
 pieces = []
@@ -39,49 +37,47 @@ playerColor = WHITE
 
 EMPTY = 0 #Even though 0 is shorter to type..
 class Piece():
-	def __init__(self,name,image,startpos):
+	def __init__(self,name,startpos):
 		global pieces
 		self.name = name
-		self.image = image
-		self.x = startpos[0]
-		self.y = startpos[1]
+		self.image = pieceimages[name]
+		self.pos = startpos
 		board[startpos[0]][startpos[1]] = self
 		pieces.append(self)
 	def move(self,pos):
 		global selected
-		board[self.x][self.y] = EMPTY
-		self.x = pos[0]
-		self.y = pos[1]
-		board[self.x][self.y] = self
+		board[self.pos[0]][self.pos[1]] = EMPTY
+		self.pos = pos
+		board[self.pos[0]][self.pos[1]] = self
 		selected = False
 	def attack(self,enemy):
 		global pieces
-		self.move((enemy.x, enemy.y))
+		self.move(enemy.pos)
 		pieces.remove(enemy)
 	def select(self):
 		global selected
-		selected = (self.x, self.y)
+		selected = self.pos
 
 for i in range(0, 8):
-	Piece("W_Pawn", pygame.image.load("../images/wpawn.png").convert_alpha(), (i, 6))
-	Piece("B_Pawn", pygame.image.load("../images/bpawn.png").convert_alpha(), (i, 1))
+	Piece("W_Pawn", (i, 6))
+	Piece("B_Pawn", (i, 1))
 
-Piece("W_Rook", pygame.image.load("../images/wrook.png").convert_alpha(), (0, 7))
-Piece("W_Rook", pygame.image.load("../images/wrook.png").convert_alpha(), (7, 7))
-Piece("W_Knight", pygame.image.load("../images/wknight.png").convert_alpha(), (1, 7))
-Piece("W_Knight", pygame.image.load("../images/wknight.png").convert_alpha(), (6, 7))
-Piece("W_Bishop", pygame.image.load("../images/wbishop.png").convert_alpha(), (2, 7))
-Piece("W_Bishop", pygame.image.load("../images/wbishop.png").convert_alpha(), (5, 7))
-Piece("W_Queen", pygame.image.load("../images/wqueen.png").convert_alpha(), (3, 7))
-Piece("W_King", pygame.image.load("../images/wking.png").convert_alpha(), (4, 7))
-Piece("B_Rook", pygame.image.load("../images/brook.png").convert_alpha(), (0, 0))
-Piece("B_Rook", pygame.image.load("../images/brook.png").convert_alpha(), (7, 0))
-Piece("B_Knight", pygame.image.load("../images/bknight.png").convert_alpha(), (1, 0))
-Piece("B_Knight", pygame.image.load("../images/bknight.png").convert_alpha(), (6, 0))
-Piece("B_Bishop", pygame.image.load("../images/bbishop.png").convert_alpha(), (2, 0))
-Piece("B_Bishop", pygame.image.load("../images/bbishop.png").convert_alpha(), (5, 0))
-Piece("B_Queen", pygame.image.load("../images/bqueen.png").convert_alpha(), (3, 0))
-Piece("B_King", pygame.image.load("../images/bking.png").convert_alpha(), (4, 0))
+Piece("W_Rook",   (0, 7))
+Piece("W_Rook",   (7, 7))
+Piece("W_Knight", (1, 7))
+Piece("W_Knight", (6, 7))
+Piece("W_Bishop", (2, 7))
+Piece("W_Bishop", (5, 7))
+Piece("W_Queen",  (3, 7))
+Piece("W_King",   (4, 7))
+Piece("B_Rook",   (0, 0))
+Piece("B_Rook",   (7, 0))
+Piece("B_Knight", (1, 0))
+Piece("B_Knight", (6, 0))
+Piece("B_Bishop", (2, 0))
+Piece("B_Bishop", (5, 0))
+Piece("B_Queen",  (3, 0))
+Piece("B_King",   (4, 0))
 
 font = pygame.font.SysFont("monospace", 20)
 def updateText():
@@ -107,8 +103,7 @@ def isFree(pos):
 	return board[row][col] == EMPTY
 
 #Returns top left pixel value of grid pos
-def pixelpos(pos):
-	return (pos[0] * tilew, pos[1] * tileh)
+def pixelpos(pos): return (pos[0] * tilew, pos[1] * tileh)
 
 #Draws board pieces depending on value
 def drawPieces():
