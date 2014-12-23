@@ -10,10 +10,7 @@ def queenLogic(piece, newpos):
 	if rookLogic(piece, newpos):
 		return rookLogic(piece, newpos)
 	else:
-		if abs(piece.pos[1]-newpos[1]) == abs(piece.pos[0]-newpos[0]):
-			return True
-		else:
-			return False
+		return abs(piece.pos[1]-newpos[1]) == abs(piece.pos[0]-newpos[0])
 piecelogic["_Queen"]=queenLogic
 
 #Pull from table of logics
