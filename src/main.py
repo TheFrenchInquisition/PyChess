@@ -23,6 +23,12 @@ wknightimg = pygame.image.load("../images/wknight.png").convert_alpha()
 wbishopimg = pygame.image.load("../images/wbishop.png").convert_alpha()
 wqueenimg = pygame.image.load("../images/wqueen.png").convert_alpha()
 wkingimg = pygame.image.load("../images/wking.png").convert_alpha()
+bpawnimg = pygame.image.load("../images/bpawn.png").convert_alpha()
+brookimg = pygame.image.load("../images/brook.png").convert_alpha()
+bknightimg = pygame.image.load("../images/bknight.png").convert_alpha()
+bbishopimg = pygame.image.load("../images/bbishop.png").convert_alpha()
+bqueenimg = pygame.image.load("../images/bqueen.png").convert_alpha()
+bkingimg = pygame.image.load("../images/bking.png").convert_alpha()
 selectimg = pygame.image.load("../images/select.png").convert_alpha()
 
 selected = False
