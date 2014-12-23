@@ -1,16 +1,25 @@
 import math
 
-def pieceCanMove(piece, newpos):
-	if piece.name.endswith("_Rook"):
-		return ((piece.pos[0] == newpos[0]) or (piece.pos[1] == newpos[1]))
-	if piece.name.endswith("_Queen"):
-		if piece.pos[0] == newpos[0]:
-			return (abs(piece.pos[1]-newpos[1]) == 1)
-		elif piece.pos[1] == newpos[1]:
-			return (abs(piece.pos[0]-newpos[0]) == 1)
+piecelogic = {}
+
+def rookLogic(piece, newpos):
+	return ((piece.pos[0] == newpos[0]) or (piece.pos[1] == newpos[1]))
+piecelogic["_Rook"]=rookLogic
+
+def queenLogic(piece, newpos):
+	if rookLogic(piece, newpos):
+		return rookLogic(piece, newpos)
+	else:
+		if abs(piece.pos[1]-newpos[1]) == abs(piece.pos[0]-newpos[0]):
+			return True
 		else:
-			if abs(piece.pos[1]-newpos[1]) == abs(piece.pos[0]-newpos[0]):
-				return True
-			else:
-				return False
-	return True
+			return False
+piecelogic["_Queen"]=queenLogic
+
+#Pull from table of logics
+def pieceCanMove(piece, newpos):
+	for key in piecelogic:
+		if piece.name.endswith(key):
+			return piecelogic[key](piece, newpos)
+	else:
+		return True
