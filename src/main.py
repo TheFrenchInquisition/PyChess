@@ -7,13 +7,13 @@ screen = pygame.display.set_mode(size)
 pygame.display.set_caption("Chess")
 
 #load images and stuff
-wpawnimg = pygame.image.load("images\wpawn.png").convert_alpha()
-wrookimg = pygame.image.load("images\wrook.png").convert_alpha()
-wknightimg = pygame.image.load("images\wknight.png").convert_alpha()
-wbishopimg = pygame.image.load("images\wbishop.png").convert_alpha()
-wqueenimg = pygame.image.load("images\wqueen.png").convert_alpha()
-wkingimg = pygame.image.load("images\wking.png").convert_alpha()
-selectimg = pygame.image.load("images\select.png").convert_alpha()
+wpawnimg = pygame.image.load("..\images\wpawn.png").convert_alpha()
+wrookimg = pygame.image.load("..\images\wrook.png").convert_alpha()
+wknightimg = pygame.image.load("..\images\wknight.png").convert_alpha()
+wbishopimg = pygame.image.load("..\images\wbishop.png").convert_alpha()
+wqueenimg = pygame.image.load("..\images\wqueen.png").convert_alpha()
+wkingimg = pygame.image.load("..\images\wking.png").convert_alpha()
+selectimg = pygame.image.load("..\images\select.png").convert_alpha()
 
 somethingIsSelected = False
 selected = (0, 0)
@@ -52,6 +52,8 @@ def getCPos(rpos):
         nxpos = 7
     elif rxpos <=360:
         nxpos = 8
+    else:
+        return False
     rypos = rpos[1]-20
     if rypos <= 45:
         nypos = 8
@@ -69,6 +71,8 @@ def getCPos(rpos):
         nypos = 2
     elif rypos <=360:
         nypos = 1
+    else:
+        return False
     return (nxpos, nypos)
 #this does the opposite. will return value at top left corner of cpos
 def getRPos(cpos):
@@ -159,6 +163,7 @@ while True:
         if event.type == pygame.QUIT: 
             pygame.quit()
             sys.exit()
-        elif event.type == pygame.MOUSEBUTTONUP:
+        elif event.type == pygame.MOUSEBUTTONUP and getCPos(pygame.mouse.get_pos()) is not False:
+            
             select(getCPos(pygame.mouse.get_pos()))
     pygame.display.flip()
