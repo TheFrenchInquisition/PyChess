@@ -29,6 +29,13 @@ WBISH = 4
 WQUEE = 5
 WKING = 6
 
+BPAWN = 11
+BROOK = 12
+BKNIG = 13
+BBISH = 14
+BQUEE = 15
+BKING = 16
+
 pieceimgs = {
 	WPAWN: pygame.image.load("../images/wpawn.png").convert_alpha(),
 	WROOK: pygame.image.load("../images/wrook.png").convert_alpha(),
