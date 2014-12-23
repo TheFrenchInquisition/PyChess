@@ -131,7 +131,6 @@ while True:
 			(mouseX, mouseY) = pygame.mouse.get_pos()
 			curCol = int(math.ceil(mouseY/tileh) - modifier)
 			curRow = int(math.ceil(mouseX/tilew) - modifier)
-			print(curRow, curCol)
 
 			if selected == False:
 				if not isFree((curRow, curCol)):
@@ -139,5 +138,7 @@ while True:
 			else:
 				if isFree((curRow, curCol)):
 					move(selected, (curRow, curCol))
+				else:
+					select((curRow, curCol))
 
 	pygame.display.update()
