@@ -96,12 +96,12 @@ def select(pos):
 
 screen.fill((102, 102, 102))
 
-cPiece(WPAWN, (0, 1))
-cPiece(WROOK, (0, 0))
-cPiece(WKNIG, (1, 0))
-cPiece(WBISH, (2, 0))
-cPiece(WQUEE, (3, 0))
-cPiece(WKING, (4, 0))
+cPiece(WPAWN, (0, 6))
+cPiece(WROOK, (0, 7))
+cPiece(WKNIG, (1, 7))
+cPiece(WBISH, (2, 7))
+cPiece(WQUEE, (3, 7))
+cPiece(WKING, (4, 7))
 
 clock = pygame.time.Clock()
 
@@ -133,4 +133,4 @@ while True:
 				if isFree((curRow, curCol)):
 					move(selected, (curRow, curCol))
 
-	pygame.display.flip()
+	pygame.display.update()
