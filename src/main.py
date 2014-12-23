@@ -1,9 +1,6 @@
 import pygame, sys, os, math
 pygame.init()
 
-python_version_stupid = "Python3"
-modifier = python_version_stupid == "Python3" and 1 or 0
-
 tilew, tileh = 45, 45
 height = tileh * 8
 width = tilew * 8
@@ -111,8 +108,8 @@ while True:
 			sys.exit()
 		elif event.type == pygame.MOUSEBUTTONUP:
 			(mouseX, mouseY) = pygame.mouse.get_pos()
-			curCol = int(math.ceil(mouseY/tileh) - modifier)
-			curRow = int(math.ceil(mouseX/tilew) - modifier)
+			curCol = int(math.ceil(mouseY/tileh) - 1)
+			curRow = int(math.ceil(mouseX/tilew) - 1)
 
 			if selected == False:
 				if not isFree((curRow, curCol)):
