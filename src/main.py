@@ -20,36 +20,7 @@ pygame.display.set_caption("Chess")
 selectimg = pygame.image.load("../images/select.png").convert_alpha()
 
 selected = False
-
-EMPTY = 0 #Even though 0 is shorter to type..
-WPAWN = 1
-WROOK = 2
-WKNIG = 3
-WBISH = 4
-WQUEE = 5
-WKING = 6
-
-BPAWN = 11
-BROOK = 12
-BKNIG = 13
-BBISH = 14
-BQUEE = 15
-BKING = 16
-
-pieceimgs = {
-	WPAWN: pygame.image.load("../images/wpawn.png").convert_alpha(),
-	WROOK: pygame.image.load("../images/wrook.png").convert_alpha(),
-	WKNIG: pygame.image.load("../images/wknight.png").convert_alpha(),
-	WBISH: pygame.image.load("../images/wbishop.png").convert_alpha(),
-	WQUEE: pygame.image.load("../images/wqueen.png").convert_alpha(),
-	WKING: pygame.image.load("../images/wking.png").convert_alpha(),
-	BPAWN: pygame.image.load("../images/bpawn.png").convert_alpha(),
-	BROOK: pygame.image.load("../images/brook.png").convert_alpha(),
-	BKNIG: pygame.image.load("../images/bknight.png").convert_alpha(),
-	BBISH: pygame.image.load("../images/bbishop.png").convert_alpha(),
-	BQUEE: pygame.image.load("../images/bqueen.png").convert_alpha(),
-	BKING: pygame.image.load("../images/bking.png").convert_alpha(),
-}
+pieces = []
 
 board = [
 	[0, 0, 0, 0, 0, 0, 0, 0],
@@ -61,6 +32,39 @@ board = [
 	[0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0],
 ]
+
+EMPTY = 0 #Even though 0 is shorter to type..
+class Piece():
+	def __init__(self,name,image,startpos):
+		global pieces
+		self.name = name
+		self.image = image
+		self.x = startpos[0]
+		self.y = startpos[1]
+		board[startpos[0]][startpos[1]] = self
+		pieces.append(self)
+	def move(self,pos):
+		global selected
+		board[self.x][self.y] = EMPTY
+		self.x = pos[0]
+		self.y = pos[1]
+		board[self.x][self.y] = self
+		selected = False
+	def select(self):
+		global selected
+		selected = (self.x, self.y)
+
+for i in range(0, 8):
+	Piece("W_Pawn"+str(i), pygame.image.load("../images/wpawn.png").convert_alpha(), (i, 6))
+
+Piece("W_Rook", pygame.image.load("../images/wrook.png").convert_alpha(), (0, 7))
+Piece("W_Rook2", pygame.image.load("../images/wrook.png").convert_alpha(), (7, 7))
+Piece("W_Knight", pygame.image.load("../images/wknight.png").convert_alpha(), (1, 7))
+Piece("W_Knight2", pygame.image.load("../images/wknight.png").convert_alpha(), (6, 7))
+Piece("W_Bishop", pygame.image.load("../images/wbishop.png").convert_alpha(), (2, 7))
+Piece("W_Bishop2", pygame.image.load("../images/wbishop.png").convert_alpha(), (5, 7))
+Piece("W_Queen", pygame.image.load("../images/wqueen.png").convert_alpha(), (3, 7))
+Piece("W_King", pygame.image.load("../images/wking.png").convert_alpha(), (4, 7))
 
 #Makes sure x is between min and max
 def math_clamp(x, min, max): return x < min and min or (x > max and max or x)
@@ -81,34 +85,12 @@ def drawPieces():
 	for i in range(len(board)):
 		row = board[i]
 		for i2 in range(len(row)):
-			square = row[i2]
-			if square != EMPTY:
-				screen.blit(pieceimgs[square], (i*45, i2*45))
+			piece = row[i2]
+			if piece != EMPTY:
+				screen.blit(piece.image, (i*45, i2*45))
 
 			if selected != False:
 				screen.blit(selectimg, pixelpos(selected))
-
-def cPiece(piece, pos):
-	board[pos[0]][pos[1]] = piece
-
-def move(opos, npos):
-	global selected
-	board[npos[0]][npos[1]] = board[opos[0]][opos[1]]
-	board[opos[0]][opos[1]] = 0
-	selected = False
-
-def select(pos):
-	global selected
-	selected = pos
-
-screen.fill((102, 102, 102))
-
-cPiece(WPAWN, (0, 6))
-cPiece(WROOK, (0, 7))
-cPiece(WKNIG, (1, 7))
-cPiece(WBISH, (2, 7))
-cPiece(WQUEE, (3, 7))
-cPiece(WKING, (4, 7))
 
 clock = pygame.time.Clock()
 
@@ -134,11 +116,11 @@ while True:
 
 			if selected == False:
 				if not isFree((curRow, curCol)):
-					select((curRow, curCol))
+					board[curRow][curCol].select()
 			else:
 				if isFree((curRow, curCol)):
-					move(selected, (curRow, curCol))
+					board[selected[0]][selected[1]].move((curRow, curCol))
 				else:
-					select((curRow, curCol))
+					board[curRow][curCol].select()
 
 	pygame.display.update()
