@@ -126,6 +126,7 @@ while True:
 				if not isFree((curRow, curCol)):
 					select((curRow, curCol))
 			else:
-				move(selected, (curRow, curCol))
+				if isFree((curRow, curCol)):
+					move(selected, (curRow, curCol))
 
 	pygame.display.flip()
