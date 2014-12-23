@@ -147,12 +147,12 @@ while True:
 					board[curRow][curCol].select()
 			else:
 				if isFree((curRow, curCol)):
-					if pieceCanMove(board[selected[0]][selected[1]]):
+					if pieceCanMove(board[selected[0]][selected[1]], (curRow, curCol)):
 						board[selected[0]][selected[1]].move((curRow, curCol))
 						playerColor = not playerColor
 						updateText()
 				elif containsEnemy((curRow, curCol)):
-					if pieceCanMove(board[selected[0]][selected[1]]):
+					if pieceCanMove(board[selected[0]][selected[1]], (curRow, curCol)):
 						board[selected[0]][selected[1]].attack(board[curRow][curCol])
 						playerColor = not playerColor
 						updateText()
