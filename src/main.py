@@ -19,6 +19,17 @@ pygame.display.set_caption("Chess")
 selected = False
 pieces = []
 
+board = [
+	[0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0],
+]
+
 WHITE = True
 BLACK = False
 
@@ -35,14 +46,13 @@ class Piece():
 		pieces.append(self)
 	def move(self,pos):
 		global selected
+		global pieces
+		if containsEnemy((pos[0],pos[1])):
+			pieces.remove(board[pos[0]][pos[1]])
 		board[self.pos[0]][self.pos[1]] = EMPTY
 		self.pos = pos
 		board[self.pos[0]][self.pos[1]] = self
 		selected = False
-	def attack(self,enemy):
-		global pieces
-		self.move(enemy.pos)
-		pieces.remove(enemy)
 	def select(self):
 		global selected
 		selected = self.pos
@@ -135,17 +145,11 @@ while True:
 				if not isFree((curRow, curCol)) and not containsEnemy((curRow, curCol)):
 					board[curRow][curCol].select()
 			else:
-				if isFree((curRow, curCol)):
+				if isFree((curRow, curCol)) or containsEnemy((curRow, curCol)):
 					if pieceCanMove(board[selected[0]][selected[1]], (curRow, curCol)):
+						playerColor = not playerColor
+						updateText()
 						board[selected[0]][selected[1]].move((curRow, curCol))
-						print(board[curRow][curCol])
-						playerColor = not playerColor
-						updateText()
-				elif containsEnemy((curRow, curCol)):
-					if pieceCanMove(board[selected[0]][selected[1]], (curRow, curCol)):
-						board[selected[0]][selected[1]].attack(board[curRow][curCol])
-						playerColor = not playerColor
-						updateText()
 				else:
 					board[curRow][curCol].select()
 
