@@ -13,7 +13,7 @@ board = [
 	[0, 0, 0, 0, 0, 0, 0, 0],
 ]
 def collisionLogic(piece, newpos):
-	print("sdaf")
+	print("I don't even care anymore")
 def pawnLogic(piece, newpos):
 	if piece.name == "W_Pawn":
 		if abs(piece.pos[1]-newpos[1]) == 1 and piece.pos[0] != newpos[0] and board[newpos[0]][newpos[1]] != 0:
@@ -21,7 +21,6 @@ def pawnLogic(piece, newpos):
 		elif board[newpos[0]][newpos[1]] != 0:
 			return False
 		elif piece.pos[1] == 6:
-			collisionLogic(piece, newpos)
 			return (piece.pos[1]-newpos[1] < 3 and piece.pos[0] == newpos[0])
 		else:
 			return (piece.pos[1]-newpos[1] == 1 and piece.pos[0] == newpos[0])
@@ -31,7 +30,6 @@ def pawnLogic(piece, newpos):
 		elif board[newpos[0]][newpos[1]] != 0:
 			return False
 		elif piece.pos[1] == 1:
-			collisionLogic(piece, newpos)
 			return (piece.pos[1]-newpos[1] > -3 and piece.pos[0] == newpos[0])
 		else:
 			return (piece.pos[1]-newpos[1] == -1 and piece.pos[0] == newpos[0])

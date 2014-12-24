@@ -128,7 +128,6 @@ while True:
 			sys.exit()
 		elif event.type == pygame.MOUSEBUTTONUP and pygame.mouse.get_pos()[1] < 361:
 			(mouseX, mouseY) = pygame.mouse.get_pos()
-			print(mouseX, mouseY)
 			curCol = int(math.ceil(mouseY/tileh) - 1)
 			curRow = int(math.ceil(mouseX/tilew) - 1)
 
