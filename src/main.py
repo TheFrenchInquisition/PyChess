@@ -19,17 +19,6 @@ pygame.display.set_caption("Chess")
 selected = False
 pieces = []
 
-board = [
-	[0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0],
-]
-
 WHITE = True
 BLACK = False
 
@@ -149,6 +138,7 @@ while True:
 				if isFree((curRow, curCol)):
 					if pieceCanMove(board[selected[0]][selected[1]], (curRow, curCol)):
 						board[selected[0]][selected[1]].move((curRow, curCol))
+						print(board[curRow][curCol])
 						playerColor = not playerColor
 						updateText()
 				elif containsEnemy((curRow, curCol)):
