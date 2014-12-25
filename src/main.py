@@ -8,7 +8,8 @@ tilew, tileh = 45, 45
 height = tileh * 8
 width = tilew * 8
 
-size = [width, height+40]
+sbarw = 40
+size = [width, height+sbarw]
 
 os.environ["SDL_VIDEO_CENTERED"] = "1"
 
@@ -18,6 +19,17 @@ pygame.display.set_caption("Chess")
 
 selected = False
 pieces = []
+
+board = [
+	[0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0],
+]
 
 WHITE = True
 BLACK = False
@@ -31,6 +43,7 @@ class Piece():
 		self.name = name
 		self.image = pieceimages[name]
 		self.pos = startpos
+		self.hasMoved = False
 		board[startpos[0]][startpos[1]] = self
 		pieces.append(self)
 	def move(self,pos):
@@ -41,6 +54,7 @@ class Piece():
 		board[self.pos[0]][self.pos[1]] = EMPTY
 		self.pos = pos
 		board[self.pos[0]][self.pos[1]] = self
+		self.hasMoved = True
 		selected = False
 	def select(self):
 		global selected
@@ -125,7 +139,7 @@ while True:
 		if event.type == pygame.QUIT:
 			pygame.quit()
 			sys.exit()
-		elif event.type == pygame.MOUSEBUTTONUP and pygame.mouse.get_pos()[1] < 361:
+		elif event.type == pygame.MOUSEBUTTONUP and pygame.mouse.get_pos()[1] <= height:
 			(mouseX, mouseY) = pygame.mouse.get_pos()
 			curCol = int(math.ceil(mouseY/tileh) - 1)
 			curRow = int(math.ceil(mouseX/tilew) - 1)
@@ -135,7 +149,7 @@ while True:
 					board[curRow][curCol].select()
 			else:
 				if isFree((curRow, curCol)) or containsEnemy((curRow, curCol)):
-					if pieceCanMove(board[selected[0]][selected[1]], (curRow, curCol)):
+					if pieceCanMove(board[selected[0]][selected[1]], (curRow, curCol), board):
 						playerColor = not playerColor
 						updateText()
 						board[selected[0]][selected[1]].move((curRow, curCol))
