@@ -1,40 +1,10 @@
 import math
 
 piecelogic = {}
-board = [
-	[0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0],
-]
+tempboard = False #2hacky5me
 
 def collisionLogic(piece, newpos):
 	return True
-
-def pawnLogic(piece, newpos):
-	if piece.name == "W_Pawn":
-		if abs(piece.pos[1]-newpos[1]) == 1 and piece.pos[0] != newpos[0] and board[newpos[0]][newpos[1]] != 0:
-			return True
-		elif board[newpos[0]][newpos[1]] != 0:
-			return False
-		elif piece.pos[1] == 6:
-			return (piece.pos[1]-newpos[1] < 3 and piece.pos[0] == newpos[0])
-		else:
-			return (piece.pos[1]-newpos[1] == 1 and piece.pos[0] == newpos[0])
-	if piece.name == "B_Pawn":
-		if abs(piece.pos[1]-newpos[1]) == 1 and piece.pos[0] != newpos[0] and board[newpos[0]][newpos[1]] != 0:
-			return True
-		elif board[newpos[0]][newpos[1]] != 0:
-			return False
-		elif piece.pos[1] == 1:
-			return (piece.pos[1]-newpos[1] > -3 and piece.pos[0] == newpos[0])
-		else:
-			return (piece.pos[1]-newpos[1] == -1 and piece.pos[0] == newpos[0])
-piecelogic["_Pawn"]=pawnLogic
 
 def rookLogic(piece, newpos):
 	return ((piece.pos[0] == newpos[0]) or (piece.pos[1] == newpos[1]))
@@ -52,8 +22,19 @@ def kingLogic(piece, newpos):
 	return (queenLogic(piece, newpos) and (abs(piece.pos[0]-newpos[0]) <= 1 and abs(piece.pos[1]-newpos[1]) <= 1))
 piecelogic["_King"]=kingLogic
 
+def pawnLogic(piece, newpos):
+	squaresallowed = piece.hasMoved and 1 or 2 #piece.hasmoved and 1 or 2
+	movedh = piece.name.startswith("W_") and (piece.pos[0] - newpos[0]) or (newpos[0] - piece.pos[0])
+	movedv = piece.name.startswith("W_") and (piece.pos[1] - newpos[1]) or (newpos[1] - piece.pos[1])
+	if tempboard[newpos[0]][newpos[1]] != 0 and (bishopLogic(piece, newpos) and (abs(movedh) == 1 and movedv == 1)):
+		return True
+	return ((piece.pos[0] == newpos[0]) and (movedv <= squaresallowed) and (movedv > 0))
+piecelogic["_Pawn"]=pawnLogic
+
 #Pull from table of logics
-def pieceCanMove(piece, newpos):
+def pieceCanMove(piece, newpos, newboard):
+	global tempboard
+	tempboard = newboard
 	for key in piecelogic:
 		if piece.name.endswith(key):
 			return (collisionLogic(piece, newpos) and piecelogic[key](piece, newpos))
