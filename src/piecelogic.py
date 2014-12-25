@@ -1,13 +1,39 @@
 import math
 
 piecelogic = {}
+board = [
+	[0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0],
+]
 
 def collisionLogic(piece, newpos):
 	return True
 
 def pawnLogic(piece, newpos):
-	squaresallowed = 1 #piece.hasmoved and 1 or 2
-	return ((piece.pos[0] == newpos[0]) and (abs(piece.pos[1] - newpos[1]) <= squaresallowed))
+	if piece.name == "W_Pawn":
+		if abs(piece.pos[1]-newpos[1]) == 1 and piece.pos[0] != newpos[0] and board[newpos[0]][newpos[1]] != 0:
+			return True
+		elif board[newpos[0]][newpos[1]] != 0:
+			return False
+		elif piece.pos[1] == 6:
+			return (piece.pos[1]-newpos[1] < 3 and piece.pos[0] == newpos[0])
+		else:
+			return (piece.pos[1]-newpos[1] == 1 and piece.pos[0] == newpos[0])
+	if piece.name == "B_Pawn":
+		if abs(piece.pos[1]-newpos[1]) == 1 and piece.pos[0] != newpos[0] and board[newpos[0]][newpos[1]] != 0:
+			return True
+		elif board[newpos[0]][newpos[1]] != 0:
+			return False
+		elif piece.pos[1] == 1:
+			return (piece.pos[1]-newpos[1] > -3 and piece.pos[0] == newpos[0])
+		else:
+			return (piece.pos[1]-newpos[1] == -1 and piece.pos[0] == newpos[0])
 piecelogic["_Pawn"]=pawnLogic
 
 def rookLogic(piece, newpos):
