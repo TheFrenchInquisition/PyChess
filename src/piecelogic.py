@@ -10,6 +10,10 @@ def rookLogic(piece, newpos):
 	return ((piece.pos[0] == newpos[0]) or (piece.pos[1] == newpos[1]))
 piecelogic["_Rook"]=rookLogic
 
+def knightLogic(piece, newpos):
+	return not (abs(piece.pos[0]-newpos[0]) > 2 or abs(piece.pos[1]-newpos[1]) > 2 or abs(piece.pos[0]-newpos[0]) == 0 or abs(piece.pos[1]-newpos[1]) == 0 or abs(piece.pos[0]-newpos[0]) == abs(piece.pos[1]-newpos[1]))
+piecelogic["_Knight"]=knightLogic
+
 def bishopLogic(piece, newpos):
 	return (abs(piece.pos[1]-newpos[1]) == abs(piece.pos[0]-newpos[0]))
 piecelogic["_Bishop"]=bishopLogic

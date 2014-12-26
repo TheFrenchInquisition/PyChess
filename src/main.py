@@ -107,6 +107,9 @@ def isFree(pos):
 #Returns top left pixel value of grid pos
 def pixelpos(pos): return (pos[0] * tilew, pos[1] * tileh)
 
+def hightlightMoves():
+	pass
+
 #Draws board pieces depending on value
 def drawPieces():
 	global selected
