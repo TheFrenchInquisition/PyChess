@@ -7,7 +7,7 @@ tempboard = False #2hacky5me
 
 def isFree(pos):
 	row, col = pos[0], pos[1]
-	if ((row < 0) or (col < 0) or (row > len(tempboard)) or (col > len(tempboard))): return
+	if ((row < 0) or (col < 0) or (row > len(tempboard)-1) or (col > len(tempboard)-1)): return
 	return tempboard[row][col] == EMPTY
 
 def bishopCLogic(piece, newpos):
@@ -15,16 +15,30 @@ def bishopCLogic(piece, newpos):
 	for i in range(1, squareamount):
 		mod = (piece.pos[0] > newpos[0]) and -i or i
 		mod2 = (piece.pos[1] > newpos[1]) and -i or i
-		newpos = (piece.pos[0]+mod, piece.pos[1]+mod2)
-		if not isFree(newpos):
+		testpos = (piece.pos[0]+mod, piece.pos[1]+mod2)
+		if not isFree(testpos):
 			return False
 	return True
 collisionLogic["_Bishop"]=bishopCLogic
 
+def rookCLogic(piece, newpos): #broken
+	diffx = (piece.pos[0] - newpos[0])
+	diffy = (piece.pos[1] - newpos[1])
+	squareamount = diffx == 0 and abs(diffy) or abs(diffx)
+	for i in range(1, squareamount):
+		mod = (piece.pos[1] > newpos[1]) and -i or i
+		testpos1 = diffx == 0 and piece.pos[0] or piece.pos[0] + mod
+		testpos2 = diffx == 0 and piece.pos[1] + mod or piece.pos[1]
+		testpos = (testpos1, testpos2)
+		print(testpos)
+		if not isFree(testpos):
+			return False
+	return True
+collisionLogic["_Rook"]=rookCLogic
+
 def returntrue(doop, dipp):
 	return True
 collisionLogic["_Pawn"]=returntrue
-collisionLogic["_Rook"]=returntrue
 collisionLogic["_Knight"]=returntrue
 collisionLogic["_Queen"]=returntrue
 collisionLogic["_King"]=returntrue
