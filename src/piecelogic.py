@@ -12,6 +12,7 @@ def isFree(pos):
 
 def bishopCLogic(piece, newpos):
 	squareamount = abs(piece.pos[0]-newpos[0])
+	print(squareamount)
 	for i in range(1, squareamount):
 		mod = (piece.pos[0] > newpos[0]) and -i or i
 		mod2 = (piece.pos[1] > newpos[1]) and -i or i
@@ -21,26 +22,35 @@ def bishopCLogic(piece, newpos):
 	return True
 collisionLogic["_Bishop"]=bishopCLogic
 
-def rookCLogic(piece, newpos): #broken
+def rookCLogic(piece, newpos): #broken kinda
 	diffx = (piece.pos[0] - newpos[0])
 	diffy = (piece.pos[1] - newpos[1])
 	squareamount = diffx == 0 and abs(diffy) or abs(diffx)
 	for i in range(1, squareamount):
 		mod = (piece.pos[1] > newpos[1]) and -i or i
 		testpos1 = diffx == 0 and piece.pos[0] or piece.pos[0] + mod
+		print(testpos1)
 		testpos2 = diffx == 0 and piece.pos[1] + mod or piece.pos[1]
 		testpos = (testpos1, testpos2)
+		if testpos1 == -1:
+			testpos = (0, testpos2)
 		print(testpos)
 		if not isFree(testpos):
 			return False
 	return True
 collisionLogic["_Rook"]=rookCLogic
 
+def queenCLogic(piece, newpos):
+	return (bishopCLogic(piece, newpos) and rookCLogic(piece, newpos))
+collisionLogic["_Queen"]=queenCLogic
+
+def pawnCLogic(piece, newpos):
+	return (rookCLogic(piece, newpos))
+collisionLogic["_Pawn"]=pawnCLogic
+
 def returntrue(doop, dipp):
 	return True
-collisionLogic["_Pawn"]=returntrue
 collisionLogic["_Knight"]=returntrue
-collisionLogic["_Queen"]=returntrue
 collisionLogic["_King"]=returntrue
 
 def rookLogic(piece, newpos):
