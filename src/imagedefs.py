@@ -1,7 +1,7 @@
 import pygame
 #load images and stuff
 selectimg = pygame.image.load("../images/select.png")
-hightlightimg = pygame.image.load("../images/highlight.png")
+highlightimg = pygame.image.load("../images/highlight.png")
 
 pieceimages = {}
 pieceimages["W_Pawn"] = pygame.image.load("../images/wpawn.png")

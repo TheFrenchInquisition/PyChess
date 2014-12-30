@@ -99,6 +99,14 @@ def containsEnemy(pos):
 	else:
 		return (board[row][col].name.startswith("W_"))
 
+def containsAlly(pos):
+	row, col = pos[0], pos[1]
+	if isFree(pos): return False
+	if playerColor == WHITE:
+		return (board[row][col].name.startswith("W_"))
+	else:
+		return (board[row][col].name.startswith("B_"))
+
 def isFree(pos):
 	row, col = pos[0], pos[1]
 	if ((row < 0) or (col < 0) or (row > len(board)) or (col > len(board))): return
@@ -107,9 +115,6 @@ def isFree(pos):
 #Returns top left pixel value of grid pos
 def pixelpos(pos): return (pos[0] * tilew, pos[1] * tileh)
 
-def hightlightMoves():
-	pass
-
 #Draws board pieces depending on value
 def drawPieces():
 	global selected
@@ -117,11 +122,14 @@ def drawPieces():
 		row = board[i]
 		for i2 in range(len(row)):
 			piece = row[i2]
-			if piece != EMPTY:
-				screen.blit(piece.image, (i*45, i2*45))
 
 			if selected != False:
+				if pieceCanMove(board[selected[0]][selected[1]], (i, i2), board) and selected != (i, i2) and not containsAlly((i, i2)):
+					screen.blit(highlightimg, pixelpos((i, i2)))
 				screen.blit(selectimg, pixelpos(selected))
+			
+			if piece != EMPTY:
+				screen.blit(piece.image, (i*45, i2*45))
 
 clock = pygame.time.Clock()
 
@@ -135,6 +143,7 @@ while True:
 			pygame.draw.rect(screen, (255, 228, 196), [row*90+tilew, col*90+tileh, tilew, tileh])
 
 	drawPieces()
+
 	screen.blit(turnindic, (0, height+10))
 	screen.blit(piecesleft, (width-140, height+10))
 
@@ -146,7 +155,7 @@ while True:
 			(mouseX, mouseY) = pygame.mouse.get_pos()
 			curCol = int(math.ceil(mouseY/tileh) - 1)
 			curRow = int(math.ceil(mouseX/tilew) - 1)
-
+			
 			if selected == False:
 				if not isFree((curRow, curCol)) and not containsEnemy((curRow, curCol)):
 					board[curRow][curCol].select()

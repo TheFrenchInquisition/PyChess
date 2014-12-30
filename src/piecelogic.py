@@ -4,7 +4,8 @@ pieceLogic = {}
 collisionLogic = {}
 EMPTY = 0
 tempboard = False #2hacky5me
-
+def promote(pos):
+	pass
 def isFree(pos):
 	row, col = pos[0], pos[1]
 	if ((row < 0) or (col < 0) or (row > len(tempboard)-1) or (col > len(tempboard)-1)): return
@@ -12,7 +13,6 @@ def isFree(pos):
 
 def bishopCLogic(piece, newpos):
 	squareamount = abs(piece.pos[0]-newpos[0])
-	print(squareamount)
 	for i in range(1, squareamount):
 		mod = (piece.pos[0] > newpos[0]) and -i or i
 		mod2 = (piece.pos[1] > newpos[1]) and -i or i
@@ -22,19 +22,17 @@ def bishopCLogic(piece, newpos):
 	return True
 collisionLogic["_Bishop"]=bishopCLogic
 
-def rookCLogic(piece, newpos): #broken kinda
+def rookCLogic(piece, newpos):
 	diffx = (piece.pos[0] - newpos[0])
 	diffy = (piece.pos[1] - newpos[1])
 	squareamount = diffx == 0 and abs(diffy) or abs(diffx)
 	for i in range(1, squareamount):
 		mod = (piece.pos[1] > newpos[1]) and -i or i
 		testpos1 = diffx == 0 and piece.pos[0] or piece.pos[0] + mod
-		print(testpos1)
 		testpos2 = diffx == 0 and piece.pos[1] + mod or piece.pos[1]
 		testpos = (testpos1, testpos2)
 		if testpos1 == -1:
 			testpos = (0, testpos2)
-		print(testpos)
 		if not isFree(testpos):
 			return False
 	return True
@@ -81,6 +79,8 @@ def pawnLogic(piece, newpos):
 	movedv = piece.name.startswith("W_") and (piece.pos[1] - newpos[1]) or (newpos[1] - piece.pos[1])
 	if tempboard[newpos[0]][newpos[1]] != 0 and (bishopLogic(piece, newpos) and (abs(movedh) == 1 and movedv == 1)):
 		return True
+	elif tempboard[newpos[0]][newpos[1]] != 0 and movedh == 0:
+		return False
 	return ((piece.pos[0] == newpos[0]) and (movedv <= squaresallowed) and (movedv > 0))
 pieceLogic["_Pawn"]=pawnLogic
 
