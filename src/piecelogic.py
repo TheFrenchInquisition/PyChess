@@ -23,9 +23,9 @@ def bishopCLogic(piece, newpos):
 collisionLogic["_Bishop"]=bishopCLogic
 
 def rookCLogic(piece, newpos):
-	diffx = (piece.pos[0] - newpos[0])
-	diffy = (piece.pos[1] - newpos[1])
-	squareamount = diffx == 0 and abs(diffy) or abs(diffx)
+	diffx = abs((piece.pos[0] - newpos[0]))
+	diffy = abs((piece.pos[1] - newpos[1]))
+	squareamount = diffx == 0 and diffx or diffy
 	for i in range(1, squareamount):
 		mod = (piece.pos[1] > newpos[1]) and -i or i
 		testpos1 = diffx == 0 and piece.pos[0] or piece.pos[0] + mod
@@ -39,7 +39,12 @@ def rookCLogic(piece, newpos):
 collisionLogic["_Rook"]=rookCLogic
 
 def queenCLogic(piece, newpos):
-	return (bishopCLogic(piece, newpos) and rookCLogic(piece, newpos))
+	diffx = abs((piece.pos[0] - newpos[0]))
+	diffy = abs((piece.pos[1] - newpos[1]))
+	if diffx == 0 or diffy == 0:
+		return (rookCLogic(piece, newpos))
+	else:
+		return (bishopCLogic(piece, newpos))
 collisionLogic["_Queen"]=queenCLogic
 
 def pawnCLogic(piece, newpos):
