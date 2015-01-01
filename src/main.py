@@ -122,15 +122,21 @@ def drawPieces():
 		row = board[i]
 		for i2 in range(len(row)):
 			piece = row[i2]
-
+			
 			if selected != False:
 				if pieceCanMove(board[selected[0]][selected[1]], (i, i2), board) and selected != (i, i2) and not containsAlly((i, i2)):
 					screen.blit(highlightimg, pixelpos((i, i2)))
-				screen.blit(selectimg, pixelpos(selected))
-			
+
+					(mouseX, mouseY) = pygame.mouse.get_pos()
+					curRow = int(math.ceil(mouseX/tilew) - 1)
+					curCol = int(math.ceil(mouseY/tileh) - 1)
+					if (curRow, curCol) == (i, i2):
+						screen.blit(hhoverimg, pixelpos((i, i2)))
+				else:
+					pass
 			if piece != EMPTY:
 				screen.blit(piece.image, (i*45, i2*45))
-
+				
 clock = pygame.time.Clock()
 
 while True:
@@ -155,7 +161,7 @@ while True:
 			(mouseX, mouseY) = pygame.mouse.get_pos()
 			curCol = int(math.ceil(mouseY/tileh) - 1)
 			curRow = int(math.ceil(mouseX/tilew) - 1)
-			
+
 			if selected == False:
 				if not isFree((curRow, curCol)) and not containsEnemy((curRow, curCol)):
 					board[curRow][curCol].select()
