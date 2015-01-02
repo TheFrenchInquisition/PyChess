@@ -1,7 +1,6 @@
 import math
 
 pieceLogic = {}
-collisionLogic = {}
 EMPTY = 0
 tempboard = False #2hacky5me
 lastmove = False
@@ -14,18 +13,7 @@ def isFree(pos):
 	if ((row < 0) or (col < 0) or (row > len(tempboard)-1) or (col > len(tempboard)-1)): return
 	return tempboard[row][col] == EMPTY
 
-def bishopCLogic(piece, newpos):
-	squareamount = abs(piece.pos[0]-newpos[0])
-	for i in range(1, squareamount):
-		mod = (piece.pos[0] > newpos[0]) and -i or i
-		mod2 = (piece.pos[1] > newpos[1]) and -i or i
-		testpos = (piece.pos[0]+mod, piece.pos[1]+mod2)
-		if not isFree(testpos):
-			return False
-	return True
-collisionLogic["_Bishop"]=bishopCLogic
-
-def rookCLogic(piece, newpos):
+def CLogic(piece, newpos):
 	squareamountx = abs(piece.pos[0]-newpos[0])
 	squareamounty = abs(piece.pos[1]-newpos[1])
 	if squareamountx == 0:
@@ -34,33 +22,25 @@ def rookCLogic(piece, newpos):
 			testpos = (piece.pos[0], piece.pos[1]+mod)
 			if not isFree(testpos):
 				return False
-	else:
+	elif squareamounty == 0:
 		for i in range(1, squareamountx):
 			mod = (piece.pos[0] > newpos[0]) and -i or i
 			testpos = (piece.pos[0]+mod, piece.pos[1])
 			if not isFree(testpos):
 				return False
-	return True
-collisionLogic["_Rook"]=rookCLogic
-
-def queenCLogic(piece, newpos):
-	diffx = abs((piece.pos[0] - newpos[0]))
-	diffy = abs((piece.pos[1] - newpos[1]))
-	if diffx == 0 or diffy == 0:
-		return (rookCLogic(piece, newpos))
 	else:
-		return (bishopCLogic(piece, newpos))
-collisionLogic["_Queen"]=queenCLogic
-
-def pawnCLogic(piece, newpos):
-	return (rookCLogic(piece, newpos))
-collisionLogic["_Pawn"]=pawnCLogic
+		squareamount = abs(piece.pos[0]-newpos[0])
+		for i in range(1, squareamount):
+			mod = (piece.pos[0] > newpos[0]) and -i or i
+			mod2 = (piece.pos[1] > newpos[1]) and -i or i
+			testpos = (piece.pos[0]+mod, piece.pos[1]+mod2)
+			if not isFree(testpos):
+				return False
+		return True
+	return True
 
 def returntrue(doop, dipp):
 	return True
-
-collisionLogic["_Knight"]=returntrue
-collisionLogic["_King"]=returntrue
 
 def rookLogic(piece, newpos):
 	return ((piece.pos[0] == newpos[0]) or (piece.pos[1] == newpos[1]))
@@ -105,6 +85,6 @@ def pieceCanMove(piece, newpos, newboard, bool):
 	tempboard = newboard
 	for key in pieceLogic:
 		if piece.name.endswith(key):
-			return (pieceLogic[key](piece, newpos) and collisionLogic[key](piece, newpos) and checkLogic())
+			return (pieceLogic[key](piece, newpos) and CLogic(piece, newpos) and checkLogic())
 
 	return True
