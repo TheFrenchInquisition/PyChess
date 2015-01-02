@@ -4,6 +4,8 @@ pieceLogic = {}
 collisionLogic = {}
 EMPTY = 0
 tempboard = False #2hacky5me
+lastmove = False
+
 def promote(pos):
 	pass
 
@@ -97,8 +99,9 @@ def checkLogic():
 	return True
 
 #Pull from table of logics
-def pieceCanMove(piece, newpos, newboard):
+def pieceCanMove(piece, newpos, newboard, bool):
 	global tempboard
+
 	tempboard = newboard
 	for key in pieceLogic:
 		if piece.name.endswith(key):

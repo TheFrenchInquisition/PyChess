@@ -49,7 +49,7 @@ class Piece():
 	def move(self,pos):
 		global selected
 		global pieces
-		if containsEnemy((pos[0],pos[1])):
+		if contains((pos[0],pos[1])) == 2:
 			pieces.remove(board[pos[0]][pos[1]])
 		board[self.pos[0]][self.pos[1]] = EMPTY
 		self.pos = pos
@@ -91,26 +91,20 @@ updateText()
 #Makes sure x is between min and max
 def math_clamp(x, min, max): return x < min and min or (x > max and max or x)
 
-def containsEnemy(pos):
-	row, col = pos[0], pos[1]
-	if isFree(pos): return False
+def contains(pos):
+	boardpos = board[pos[0]][pos[1]]
+	if boardpos == 0:
+		return 0 #Returns 0 if specified position does not contain a piece
 	if playerColor == WHITE:
-		return (board[row][col].name.startswith("B_"))
+		if boardpos.name.startswith("W_"):
+			return 1 #1 if it's an allied piece
+		else:
+			return 2 #2 if it's an enemy
 	else:
-		return (board[row][col].name.startswith("W_"))
-
-def containsAlly(pos):
-	row, col = pos[0], pos[1]
-	if isFree(pos): return False
-	if playerColor == WHITE:
-		return (board[row][col].name.startswith("W_"))
-	else:
-		return (board[row][col].name.startswith("B_"))
-
-def isFree(pos):
-	row, col = pos[0], pos[1]
-	if ((row < 0) or (col < 0) or (row > len(board)) or (col > len(board))): return
-	return board[row][col] == EMPTY
+		if boardpos.name.startswith("B_"):
+			return 1
+		else:
+			return 2
 
 #Returns top left pixel value of grid pos
 def pixelpos(pos): return (pos[0] * tilew, pos[1] * tileh)
@@ -124,7 +118,7 @@ def drawPieces():
 			piece = row[i2]
 			
 			if selected != False:
-				if pieceCanMove(board[selected[0]][selected[1]], (i, i2), board) and selected != (i, i2) and not containsAlly((i, i2)):
+				if pieceCanMove(board[selected[0]][selected[1]], (i, i2), board, 1) and selected != (i, i2) and contains((i, i2)) != 1:
 					screen.blit(highlightimg, pixelpos((i, i2)))
 
 					(mouseX, mouseY) = pygame.mouse.get_pos()
@@ -163,11 +157,11 @@ while True:
 			curRow = int(math.ceil(mouseX/tilew) - 1)
 
 			if selected == False:
-				if not isFree((curRow, curCol)) and not containsEnemy((curRow, curCol)):
+				if contains((curRow, curCol)) == 1:
 					board[curRow][curCol].select()
 			else:
-				if isFree((curRow, curCol)) or containsEnemy((curRow, curCol)):
-					if pieceCanMove(board[selected[0]][selected[1]], (curRow, curCol), board):
+				if contains((curRow, curCol)) != 1:
+					if pieceCanMove(board[selected[0]][selected[1]], (curRow, curCol), board, 0):
 						playerColor = not playerColor
 						updateText()
 						board[selected[0]][selected[1]].move((curRow, curCol))
