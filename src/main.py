@@ -19,7 +19,6 @@ pygame.display.set_caption("Chess")
 
 selected = False
 pieces = []
-
 board = [
 	[0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0],
@@ -118,12 +117,12 @@ def drawPieces():
 			piece = row[i2]
 			
 			if selected != False:
-				if pieceCanMove(board[selected[0]][selected[1]], (i, i2), board, 1) and selected != (i, i2) and contains((i, i2)) != 1:
+				if pieceCanMove(board[selected[0]][selected[1]], (i, i2), board, 1, playerColor) and selected != (i, i2) and contains((i, i2)) != 1:
 					screen.blit(highlightimg, pixelpos((i, i2)))
 
 					(mouseX, mouseY) = pygame.mouse.get_pos()
-					curRow = int(math.ceil(mouseX/tilew) - 1)
-					curCol = int(math.ceil(mouseY/tileh) - 1)
+					curRow = int(math.ceil(mouseX/tilew))
+					curCol = int(math.ceil(mouseY/tileh))
 					if (curRow, curCol) == (i, i2):
 						screen.blit(hhoverimg, pixelpos((i, i2)))
 				else:
@@ -153,15 +152,15 @@ while True:
 			sys.exit()
 		elif event.type == pygame.MOUSEBUTTONUP and pygame.mouse.get_pos()[1] <= height:
 			(mouseX, mouseY) = pygame.mouse.get_pos()
-			curCol = int(math.ceil(mouseY/tileh) - 1)
-			curRow = int(math.ceil(mouseX/tilew) - 1)
+			curCol = int(math.ceil(mouseY/tileh))
+			curRow = int(math.ceil(mouseX/tilew))
 
 			if selected == False:
 				if contains((curRow, curCol)) == 1:
 					board[curRow][curCol].select()
 			else:
 				if contains((curRow, curCol)) != 1:
-					if pieceCanMove(board[selected[0]][selected[1]], (curRow, curCol), board, 0):
+					if pieceCanMove(board[selected[0]][selected[1]], (curRow, curCol), board, 0, playerColor):
 						playerColor = not playerColor
 						updateText()
 						board[selected[0]][selected[1]].move((curRow, curCol))
