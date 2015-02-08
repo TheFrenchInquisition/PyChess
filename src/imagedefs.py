@@ -2,7 +2,7 @@ import pygame
 #load images and stuff
 highlightimg = pygame.image.load("../images/highlight.png")
 hhoverimg = pygame.image.load("../images/hhover.png")
-
+iconimg = pygame.image.load("../images/icon.png")
 pieceimages = {}
 pieceimages["W_Pawn"] = pygame.image.load("../images/wpawn.png")
 pieceimages["W_Rook"] = pygame.image.load("../images/wrook.png")

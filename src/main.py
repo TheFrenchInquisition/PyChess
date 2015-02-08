@@ -12,31 +12,16 @@ sbarw = 40
 size = [width, height+sbarw]
 
 os.environ["SDL_VIDEO_CENTERED"] = "1"
+pygame.display.set_icon(iconimg)
+pygame.display.set_caption("Chess")
 
 screen = pygame.display.set_mode(size)
-
-pygame.display.set_caption("Chess")
 
 selected = False
 pieces = []
 
-board = [
-	[0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0],
-]
+playerIsWhite = True
 
-WHITE = True
-BLACK = False
-
-playerColor = WHITE
-
-EMPTY = 0 #Even though 0 is shorter to type..
 class Piece():
 	def __init__(self,name,startpos):
 		global pieces
@@ -84,18 +69,15 @@ Piece("B_King",   (4, 0))
 font = pygame.font.SysFont("monospace", 20)
 def updateText():
 	global turnindic, piecesleft
-	turnindic = font.render("Turn: "+(playerColor == WHITE and "white" or "black"), True, (139, 125, 107), (0, 0, 0, 0))
+	turnindic = font.render("Turn: "+("white" if playerIsWhite == True else "black"), True, (139, 125, 107), (0, 0, 0, 0))
 	piecesleft = font.render("Pieces: "+str(len(pieces)), True, (139, 125, 107), (0, 0, 0, 0))
 updateText()
-
-#Makes sure x is between min and max
-def math_clamp(x, min, max): return x < min and min or (x > max and max or x)
 
 def contains(pos):
 	boardpos = board[pos[0]][pos[1]]
 	if boardpos == 0:
 		return 0 #Returns 0 if specified position does not contain a piece
-	if playerColor == WHITE:
+	if playerIsWhite == True:
 		if boardpos.name.startswith("W_"):
 			return 1 #1 if it's an allied piece
 		else:
@@ -118,7 +100,7 @@ def drawPieces():
 			piece = row[i2]
 			
 			if selected != False:
-				if pieceCanMove(board[selected[0]][selected[1]], (i, i2), board, 1) and selected != (i, i2) and contains((i, i2)) != 1:
+				if pieceCanMove(board[selected[0]][selected[1]], (i, i2)) and selected != (i, i2) and contains((i, i2)) != 1:
 					screen.blit(highlightimg, pixelpos((i, i2)))
 
 					(mouseX, mouseY) = pygame.mouse.get_pos()
@@ -135,7 +117,7 @@ clock = pygame.time.Clock()
 
 while True:
 	clock.tick(30)
-
+	
 	pygame.draw.rect(screen, (139, 125, 107), [0, 0, width, height])
 	for row in range(4):
 		for col in range(4):
@@ -161,8 +143,8 @@ while True:
 					board[curRow][curCol].select()
 			else:
 				if contains((curRow, curCol)) != 1:
-					if pieceCanMove(board[selected[0]][selected[1]], (curRow, curCol), board, 0):
-						playerColor = not playerColor
+					if pieceCanMove(board[selected[0]][selected[1]], (curRow, curCol)):
+						playerIsWhite = not playerIsWhite
 						updateText()
 						board[selected[0]][selected[1]].move((curRow, curCol))
 				else:
