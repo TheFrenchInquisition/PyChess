@@ -50,42 +50,26 @@ class Piece():
 		print(self.beingAttacked)
 		selected = self.pos
 
-def initPieces():
-	global pieces
-	global board
-	board = [
-		[0, 0, 0, 0, 0, 0, 0, 0],
-		[0, 0, 0, 0, 0, 0, 0, 0],
-		[0, 0, 0, 0, 0, 0, 0, 0],
-		[0, 0, 0, 0, 0, 0, 0, 0],
-		[0, 0, 0, 0, 0, 0, 0, 0],
-		[0, 0, 0, 0, 0, 0, 0, 0],
-		[0, 0, 0, 0, 0, 0, 0, 0],
-		[0, 0, 0, 0, 0, 0, 0, 0],
-	]
-	pieces = []
-	for i in range(0, 8):
-		Piece("W_Pawn", (i, 6))
-		Piece("B_Pawn", (i, 1))
+for i in range(0, 8):
+	Piece("W_Pawn", (i, 6))
+	Piece("B_Pawn", (i, 1))
 
-	Piece("W_Rook",   (0, 7))
-	Piece("W_Rook",   (7, 7))
-	Piece("W_Knight", (1, 7))
-	Piece("W_Knight", (6, 7))
-	Piece("W_Bishop", (2, 7))
-	Piece("W_Bishop", (5, 7))
-	Piece("W_Queen",  (3, 7))
-	Piece("W_King",   (4, 7))
-	Piece("B_Rook",   (0, 0))
-	Piece("B_Rook",   (7, 0))
-	Piece("B_Knight", (1, 0))
-	Piece("B_Knight", (6, 0))
-	Piece("B_Bishop", (2, 0))
-	Piece("B_Bishop", (5, 0))
-	Piece("B_Queen",  (3, 0))
-	Piece("B_King",   (4, 0))
-
-initPieces()
+Piece("W_Rook",   (0, 7))
+Piece("W_Rook",   (7, 7))
+Piece("W_Knight", (1, 7))
+Piece("W_Knight", (6, 7))
+Piece("W_Bishop", (2, 7))
+Piece("W_Bishop", (5, 7))
+Piece("W_Queen",  (3, 7))
+Piece("W_King",   (4, 7))
+Piece("B_Rook",   (0, 0))
+Piece("B_Rook",   (7, 0))
+Piece("B_Knight", (1, 0))
+Piece("B_Knight", (6, 0))
+Piece("B_Bishop", (2, 0))
+Piece("B_Bishop", (5, 0))
+Piece("B_Queen",  (3, 0))
+Piece("B_King",   (4, 0))
 
 font = pygame.font.SysFont("monospace", 20)
 def updateText():
@@ -139,7 +123,7 @@ def getAttacks():
 		piece.beingAttacked = False
 		for piece2 in pieces:
 			enemyname = "B_" if piece.name.startswith("W_") else "W_"
-			if piece != piece2 and piece2.name.startswith(enemyname) and pieceCanMove(piece2, piece.pos):
+			if piece2 != piece and piece2.name.startswith(enemyname) and pieceCanMove(piece2, piece.pos):
 				piece.beingAttacked = True
 
 clock = pygame.time.Clock()
@@ -156,7 +140,6 @@ while True:
 			pygame.draw.rect(screen, lighttan, [row*90+tilew, col*90+tileh, tilew, tileh])
 
 	drawPieces()
-	getAttacks()
 
 	screen.blit(turnindic, (0, height+10))
 	screen.blit(piecesleft, (width-140, height+10))
@@ -169,7 +152,7 @@ while True:
 			if event.key == pygame.K_ESCAPE:
 				pygame.event.post(pygame.event.Event(pygame.QUIT))
 			elif event.key == pygame.K_r:
-				initPieces()
+				pass #reset code goes here
 		elif event.type == pygame.MOUSEBUTTONUP and pygame.mouse.get_pos()[1] <= height:
 			(mouseX, mouseY) = pygame.mouse.get_pos()
 			curCol = int(math.ceil(mouseY/tileh) - 1)
@@ -184,6 +167,7 @@ while True:
 						playerIsWhite = not playerIsWhite
 						updateText()
 						board[selected[0]][selected[1]].move((curRow, curCol))
+						getAttacks()
 				else:
 					board[curRow][curCol].select()
 
