@@ -7,7 +7,10 @@ pygame.init()
 tilew, tileh = 45, 45
 height = tileh * 8
 width = tilew * 8
-
+'''
+take board, and take all possible enemy moves
+if piece is being attacked, set pieceisbeingattacked to True
+'''
 sbarw = 40
 size = [width, height+sbarw]
 
@@ -29,6 +32,7 @@ class Piece():
 		self.image = pieceimages[name]
 		self.pos = startpos
 		self.hasMoved = False
+		self.beingAttacked = False
 		board[startpos[0]][startpos[1]] = self
 		pieces.append(self)
 	def move(self,pos):
@@ -43,6 +47,7 @@ class Piece():
 		selected = False
 	def select(self):
 		global selected
+		print(self.beingAttacked)
 		selected = self.pos
 
 for i in range(0, 8):
@@ -112,7 +117,22 @@ def drawPieces():
 					pass
 			if piece != EMPTY:
 				screen.blit(piece.image, (i*45, i2*45))
-				
+def getAttacks():
+	for row in range(8):
+		for col in range(8):
+			piece = board[row][col]
+			if piece != 0:
+				for arow in range(8):
+					for acol in range(8):
+						apiece = board[arow][acol]
+						if piece.name.startswith("W_"):
+							if apiece != 0 and apiece.name.startswith("B_") and pieceCanMove(apiece, piece.pos):
+								piece.beingAttacked = True
+						else:
+							if apiece != 0 and apiece.name.startswith("W_") and pieceCanMove(apiece, piece.pos):
+								piece.beingAttacked = True
+
+
 clock = pygame.time.Clock()
 
 while True:
@@ -125,6 +145,7 @@ while True:
 			pygame.draw.rect(screen, (255, 228, 196), [row*90+tilew, col*90+tileh, tilew, tileh])
 
 	drawPieces()
+	getAttacks()
 
 	screen.blit(turnindic, (0, height+10))
 	screen.blit(piecesleft, (width-140, height+10))
