@@ -24,7 +24,7 @@ def isFree(pos):
 def CLogic(piece, newpos):
 	squareamountx = abs(piece.pos[0]-newpos[0])
 	squareamounty = abs(piece.pos[1]-newpos[1])
-	if piece.name.endswith("_Knight"):
+	if piece.name == 'Knight' or piece.name == 'King':
 		return True
 	elif squareamountx == 0:
 		for i in range(1, squareamounty):
@@ -51,45 +51,54 @@ def CLogic(piece, newpos):
 
 def rookLogic(piece, newpos):
 	return ((piece.pos[0] == newpos[0]) or (piece.pos[1] == newpos[1]))
-pieceLogic["_Rook"]=rookLogic
+pieceLogic['Rook']=rookLogic
 
 def knightLogic(piece, newpos):
 	diffx = abs(piece.pos[0]-newpos[0])
 	diffy = abs(piece.pos[1]-newpos[1])
 	return (diffx <= 2 and diffy <= 2 and diffx != 0 and diffy != 0 and diffx != diffy)
-pieceLogic["_Knight"]=knightLogic
+pieceLogic['Knight']=knightLogic
 
 def bishopLogic(piece, newpos):
 	return (abs(piece.pos[1]-newpos[1]) == abs(piece.pos[0]-newpos[0]))
-pieceLogic["_Bishop"]=bishopLogic
+pieceLogic['Bishop']=bishopLogic
 
 def queenLogic(piece, newpos):
 	return (rookLogic(piece, newpos) or bishopLogic(piece, newpos))
-pieceLogic["_Queen"]=queenLogic
+pieceLogic['Queen']=queenLogic
 
 def kingLogic(piece, newpos):
-	if (piece.pos[1]-newpos[1] == 0 and abs(piece.pos[0]-newpos[0])>1 and piece.hasMoved == False):
-		xdir = piece.pos[0]-newpos[0] > 0 and True or False #xdir is True if piece is moving to the left, False if it moves to the right
-		if xdir == True:
-			newpos[0]
+	if (piece.pos[1]-newpos[1] == 0 and (abs(piece.pos[0]-newpos[0])>1 and abs(piece.pos[0]-newpos[0]<4)) and piece.hasMoved == False):
+		xdir = True if piece.pos[0]-newpos[0] > 0  else False #xdir is True if piece is moving to the left, False if it moves to the right
+		castlerook = board[0][piece.pos[1]] if xdir == True else board[7][piece.pos[1]]
+		if xdir == True and castlerook != 0 and (abs(piece.pos[0]-newpos[0]) == 3 and castlerook.hasMoved == False):
+			if rc:
+				castlerook.rawmove((2, piece.pos[1]))
+			return True
+		elif xdir == False and castlerook != 0 and (abs(piece.pos[0]-newpos[0]) == 2 and castlerook.hasMoved == False):
+			if rc:
+				castlerook.rawmove((5, piece.pos[1]))
+			return True
 	else:
 		return (queenLogic(piece, newpos) and (abs(piece.pos[0]-newpos[0]) <= 1 and abs(piece.pos[1]-newpos[1]) <= 1))
-pieceLogic["_King"]=kingLogic
+pieceLogic['King']=kingLogic
 
 def pawnLogic(piece, newpos):
 	squaresallowed = piece.hasMoved and 1 or 2 #piece.hasmoved and 1 or 2
-	movedh = (piece.pos[0] - newpos[0]) if piece.name.startswith("W_") else (newpos[0] - piece.pos[0]) #Can't use abs like we would otherwise because pawns can't move backwards
-	movedv = (piece.pos[1] - newpos[1]) if piece.name.startswith("W_") else  (newpos[1] - piece.pos[1])
+	movedh = (piece.pos[0] - newpos[0]) if piece.color == 'W' else (newpos[0] - piece.pos[0]) #Can't use abs like we would otherwise because pawns can't move backwards
+	movedv = (piece.pos[1] - newpos[1]) if piece.color == 'W' else (newpos[1] - piece.pos[1])
 	if board[newpos[0]][newpos[1]] != 0 and (bishopLogic(piece, newpos) and (abs(movedh) == 1 and movedv == 1)):
 		return True
 	elif board[newpos[0]][newpos[1]] != 0 and movedh == 0:
 		return False
 	return ((piece.pos[0] == newpos[0]) and (movedv <= squaresallowed) and (movedv > 0))
-pieceLogic["_Pawn"]=pawnLogic
+pieceLogic['Pawn']=pawnLogic
 
 #Pull from table of logics
-def pieceCanMove(piece, newpos):
+def pieceCanMove(piece, newpos, realcall):
+	global rc
+	rc = realcall
 	for key in pieceLogic:
-		if piece.name.endswith(key):
+		if piece.name == key:
 			return (pieceLogic[key](piece, newpos) and CLogic(piece, newpos))
 	return True
