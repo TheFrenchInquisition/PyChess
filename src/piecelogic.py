@@ -71,9 +71,9 @@ def kingLogic(piece, newpos):
 	if (piece.pos[1]-newpos[1] == 0 and (abs(piece.pos[0]-newpos[0])>1 and abs(piece.pos[0]-newpos[0]<4)) and piece.hasMoved == False):
 		xdir = True if piece.pos[0]-newpos[0] > 0  else False #xdir is True if piece is moving to the left, False if it moves to the right
 		castlerook = board[0][piece.pos[1]] if xdir == True else board[7][piece.pos[1]]
-		if xdir == True and castlerook != 0 and (abs(piece.pos[0]-newpos[0]) == 3 and castlerook.hasMoved == False):
+		if xdir == True and castlerook != 0 and (abs(piece.pos[0]-newpos[0]) == 2 and castlerook.hasMoved == False):
 			if rc:
-				castlerook.rawmove((2, piece.pos[1]))
+				castlerook.rawmove((3, piece.pos[1]))
 			return True
 		elif xdir == False and castlerook != 0 and (abs(piece.pos[0]-newpos[0]) == 2 and castlerook.hasMoved == False):
 			if rc:
