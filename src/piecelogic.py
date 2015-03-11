@@ -20,8 +20,9 @@ def isFree(pos):
 	row, col = pos[0], pos[1]
 	if ((row < 0) or (col < 0) or (row > len(board)-1) or (col > len(board)-1)): return
 	return board[row][col] == EMPTY
-
-def CLogic(piece, newpos):
+def checkLogic(piece, newpos):
+	return True
+def colLogic(piece, newpos):
 	squareamountx = abs(piece.pos[0]-newpos[0])
 	squareamounty = abs(piece.pos[1]-newpos[1])
 	if piece.name == 'Knight' or piece.name == 'King':
@@ -73,11 +74,11 @@ def kingLogic(piece, newpos):
 		castlerook = board[0][piece.pos[1]] if xdir == True else board[7][piece.pos[1]]
 		if xdir == True and castlerook != 0 and (abs(piece.pos[0]-newpos[0]) == 2 and castlerook.hasMoved == False):
 			if rc:
-				castlerook.rawmove((3, piece.pos[1]))
+				castlerook.move((3, piece.pos[1]))
 			return True
 		elif xdir == False and castlerook != 0 and (abs(piece.pos[0]-newpos[0]) == 2 and castlerook.hasMoved == False):
 			if rc:
-				castlerook.rawmove((5, piece.pos[1]))
+				castlerook.move((5, piece.pos[1]))
 			return True
 	else:
 		return (queenLogic(piece, newpos) and (abs(piece.pos[0]-newpos[0]) <= 1 and abs(piece.pos[1]-newpos[1]) <= 1))
@@ -100,5 +101,5 @@ def pieceCanMove(piece, newpos, realcall):
 	rc = realcall
 	for key in pieceLogic:
 		if piece.name == key:
-			return (pieceLogic[key](piece, newpos) and CLogic(piece, newpos))
+			return (pieceLogic[key](piece, newpos) and colLogic(piece, newpos) and checkLogic(piece, newpos))
 	return True

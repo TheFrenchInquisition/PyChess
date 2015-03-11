@@ -45,12 +45,6 @@ class Piece():
 		self.pos = pos
 		board[self.pos[0]][self.pos[1]] = self
 		self.hasMoved = True
-		selected = False
-	def rawmove(self,pos):
-		board[self.pos[0]][self.pos[1]] = EMPTY
-		self.pos = pos
-		board[self.pos[0]][self.pos[1]] = self
-		self.hasMoved = True
 	def select(self):
 		global selected
 		selected = self.pos
@@ -59,22 +53,22 @@ for i in range(0, 8):
 	Piece('Pawn', 'W', (i, 6))
 	Piece('Pawn', 'B', (i, 1))
 
-Piece('Rook', 'W', (0, 7))
-Piece('Rook', 'W', (7, 7))
+Piece('Rook',   'W', (0, 7))
+Piece('Rook',   'W', (7, 7))
 Piece('Knight', 'W', (1, 7))
 Piece('Knight', 'W', (6, 7))
 Piece('Bishop', 'W', (2, 7))
 Piece('Bishop', 'W', (5, 7))
-Piece('Queen', 'W', (3, 7))
-Piece('King', 'W', (4, 7))
-Piece('Rook', 'B', (0, 0))
-Piece('Rook', 'B', (7, 0))
+Piece('Queen',  'W', (3, 7))
+Piece('King',   'W', (4, 7))
+Piece('Rook',   'B', (0, 0))
+Piece('Rook',   'B', (7, 0))
 Piece('Knight', 'B', (1, 0))
 Piece('Knight', 'B', (6, 0))
 Piece('Bishop', 'B', (2, 0))
 Piece('Bishop', 'B', (5, 0))
-Piece('Queen', 'B', (3, 0))
-Piece('King', 'B', (4, 0))
+Piece('Queen',  'B', (3, 0))
+Piece('King',   'B', (4, 0))
 
 font = pygame.font.SysFont("monospace", 20)
 def updateText():
@@ -88,15 +82,9 @@ def contains(pos):
 	if boardpos == 0:
 		return 0 #Returns 0 if specified position does not contain a piece
 	if playerIsWhite == True:
-		if boardpos.color == 'W':
-			return 1 #1 if it's an allied piece
-		else:
-			return 2 #2 if it's an enemy
+		return 1 if boardpos.color == 'W' else 2
 	else:
-		if boardpos.color == 'B':
-			return 1
-		else:
-			return 2
+		return 1 if boardpos.color == 'B' else 2
 
 #Returns top left pixel value of grid pos
 def pixelpos(pos): return (pos[0] * tilew, pos[1] * tileh)
@@ -173,6 +161,7 @@ while True:
 						playerIsWhite = not playerIsWhite
 						updateText()
 						board[selected[0]][selected[1]].move((curRow, curCol))
+						selected = False
 						getAttacks()
 				else:
 					board[curRow][curCol].select()
